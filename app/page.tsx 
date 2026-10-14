@@ -1,0 +1,83 @@
+"use client";
+
+import React, { useState } from "react";
+
+const UNIVERSITIES = [
+  { id: "kbtu", name: "KBTU", fullName: "Казахстанско-Британский Технический Университет", track: "Deep Tech & Software Architecture", slots: "12 мест" },
+  { id: "sdu", name: "SDU", fullName: "Suleyman Demirel University", track: "Fullstack Engineering & EdTech", slots: "15 мест" },
+  { id: "aitu", name: "AITU", fullName: "Astana IT University", track: "AI, Data Science & Cybersecurity", slots: "10 мест" },
+  { id: "satbayev", name: "Satbayev University", fullName: "Satbayev University", track: "Hardware, Robotics & Energy", slots: "8 мест" },
+  { id: "nu", name: "Nazarbayev University", fullName: "Nazarbayev University", track: "R&D, Quantum & High-Load Systems", slots: "5 мест" },
+  { id: "kimep", name: "KIMEP", fullName: "KIMEP University", track: "FinTech & Tech Entrepreneurship", slots: "10 мест" },
+  { id: "almau", name: "AlmaU", fullName: "Almaty Management University", track: "Product Management & Startups", slots: "10 мест" },
+  { id: "narxoz", name: "Narxoz", fullName: "Narxoz University", track: "Digital Economy & Analytics", slots: "8 мест" },
+];
+
+export default function AbdiganiTestMVP() {
+  const [activeTab, setActiveTab] = useState<"landing" | "student" | "university">("landing");
+
+  // Шаг мастера подачи заявки (1 - Регистрация, 2 - Вузы, 3 - Портфолио, 4 - Эссе, 5 - Интервью)
+  const [step, setStep] = useState<number>(1);
+
+  const [studentData, setStudentData] = useState({
+    fullName: "",
+    email: "",
+    telegram: "",
+    selectedUnis: [] as string[],
+    github: "",
+    demoUrl: "",
+    videoUrl: "",
+    problemSolution: "",
+    techStack: "",
+    bugLesson: "",
+    interviewSlot: "",
+  });
+
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [applicantStatus, setApplicantStatus] = useState<"pending" | "scheduled" | "granted" | "discount">("pending");
+
+  const toggleUniSelect = (uniId: string) => {
+    if (studentData.selectedUnis.includes(uniId)) {
+      setStudentData({
+        ...studentData,
+        selectedUnis: studentData.selectedUnis.filter((id) => id !== uniId),
+      });
+    } else {
+      if (studentData.selectedUnis.length < 3) {
+        setStudentData({
+          ...studentData,
+          selectedUnis: [...studentData.selectedUnis, uniId],
+        });
+      } else {
+        alert("Можно выбрать максимум 3 вуза!");
+      }
+    }
+  };
+
+  const handleNextStep = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (step === 2 && studentData.selectedUnis.length === 0) {
+      alert("Выберите хотя бы 1 вуз!");
+      return;
+    }
+    if (step < 5) {
+      setStep(step + 1);
+    } else {
+      setIsSubmitted(true);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-cyan-500 selection:text-slate-950">
+      {/* --- ШАПКА --- */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div onClick={() => setActiveTab("landing")} className="flex items-center gap-3 cursor-pointer">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center font-black text-slate-950 shadow-lg shadow-cyan-500/20">
+              AAS
+            </div>
+            <div>
+              <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                Абдиганитест
+              </span>
+              <span className="text-[10px] block font-mono text-cyan-400
